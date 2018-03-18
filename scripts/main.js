@@ -1,5 +1,6 @@
 require('bulma');
 const hello = require('hellojs');
+const GITHUB = require('../config').GITHUB;
 
 let $gitHubLoginButton = document.querySelector('.js-handle-github-login');
 let $logoutButton = document.querySelector('.js-handle-logout')
@@ -8,7 +9,7 @@ let $navigation = document.querySelector('.navbar-start')
 
 // AUTORIZATION
 hello.init({
-  github: '20a5918802cfa445ea66'
+  github: GITHUB.CLIENT_ID
 })
 
 const renderUserDetails = (profile) => {
@@ -45,7 +46,7 @@ $gitHubLoginButton.addEventListener('click', () => {
   })
 })
 
-// log out user 
+// log out user
 $logoutButton.addEventListener('click', () => {
   console.log('logout');
   hello.logout('github')
