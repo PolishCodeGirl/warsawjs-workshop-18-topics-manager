@@ -1,1 +1,1 @@
-let bulma = required('bluma')
+require('bulma');
