@@ -4,33 +4,50 @@ const hello = require('hellojs');
 let $gitHubLoginButton = document.querySelector('.js-handle-github-login');
 let $logoutButton = document.querySelector('.js-handle-logout')
 
+let $navigation = document.querySelector('.navbar-start')
+
 // AUTORIZATION
 hello.init({
   github: '20a5918802cfa445ea66'
 })
 
 const renderUserDetails = (profile) => {
+  const $container = document.querySelector('.user-details');
   const template = `
-    <div class="user-details navbar-item">
-      <img src="${profile.avatar_url}" alt="avatar"/>
+      <img src="${profile.avatar_url}" alt="avatar" style="display: block; margin-right: 10px;"/>
       <p>${profile.login}</p>
-    </div>
   `
-  document.querySelector('.navbar-start').innerHTML += template;
-
+  $container.innerHTML = template;
 }
 
-$gitHubLoginButton.addEventListener('click', () => {
-  hello('github').login()
-  .then(function () {
-    return hello('github').api('/me')
-  })
+// make sure you have data
+const isUserIndicate = hello('github').getAuthResponse();
+
+//get user Informations
+const getUserInformations = () => {
+  hello('github').api('/me')
   .then((userProfile) => {
     renderUserDetails(userProfile)
   })
+}
+
+// if user is already logged in don't log him/her out after refresh
+if (isUserIndicate !== null) {
+  getUserInformations();
+}
+
+// log in user by Github
+$gitHubLoginButton.addEventListener('click', () => {
+  console.log('login');
+  hello('github').login()
+  .then(() => {
+    getUserInformations()
+  })
 })
 
-
-// $logoutButton.addEventListener('click', () => {
-//   console.log('hej helołłłłł');
-// })
+// log out user 
+$logoutButton.addEventListener('click', () => {
+  console.log('logout');
+  hello.logout('github')
+    .then(() => location.reload())
+})
